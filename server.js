@@ -2,6 +2,8 @@
 // where your node app starts
 
 // init project
+var requestLanguage = require('express-request-language');
+var cookieParser = require('cookie-parser');
 var express = require('express');
 var app = express();
 
@@ -19,11 +21,22 @@ app.get("/", function (req, res) {
 });
 
 const requestIp = require('request-ip');
+var parser = require('accept-language-parser');
+
+
 // your first API endpoint... 
 app.get("/api/whoami", function (req, res) {
   const clientIp = requestIp.getClientIp(req); 
-  res.json({ ipaddress: clientIp, "language":"en-US,en;q=0.5" });
+  res.json({ ipaddress: clientIp, "language": req.headers['accept-language'], "software": req.headers['user-agent'] });
 });
+
+
+//testing route
+app.route('/dh').get((req,res) => { 
+  res.json({ ipaddress: req.headers['user-agent'] });
+});
+
+
 
 
 
